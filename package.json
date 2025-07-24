@@ -1,0 +1,47 @@
+{
+  "name": "dealer-portaal-v1",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@radix-ui/react-badge": "^1.0.4",
+    "@radix-ui/react-button": "^1.0.4",
+    "@radix-ui/react-card": "^1.0.4",
+    "@radix-ui/react-dialog": "latest",
+    "@radix-ui/react-input": "^1.0.4",
+    "@radix-ui/react-label": "^1.0.4",
+    "@radix-ui/react-select": "latest",
+    "@radix-ui/react-table": "^1.0.4",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@supabase/supabase-js": "latest",
+    "better-auth": "^0.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "i18next": "latest",
+    "i18next-browser-languagedetector": "latest",
+    "lucide-react": "^0.454.0",
+    "next": "15.2.4",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-dropzone": "latest",
+    "react-i18next": "latest",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.53.0",
+    "eslint-config-next": "15.0.0",
+    "postcss": "^8.5",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5"
+  }
+}
