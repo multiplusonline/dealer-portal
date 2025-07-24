@@ -7,9 +7,8 @@ import { DownloadTable } from "@/components/DownloadTable"
 import { ConfigurationStatus } from "@/components/ConfigurationStatus"
 import { UserManagementModel } from "@/models/userManagementModel"
 import { isSupabaseConfigured } from "@/lib/supabase/client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function DashboardPage() {
+export default function UploadsPage() {
   const { t } = useTranslation()
   const [currentUserId, setCurrentUserId] = useState<string>("")
   const [loading, setLoading] = useState(true)
@@ -39,9 +38,9 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8 space-y-8">
+      <div className="container mx-auto px-4 py-8">
         <div className="text-center py-8">
-          <p>Dashboard laden...</p>
+          <p>Uploads pagina laden...</p>
         </div>
       </div>
     )
@@ -49,27 +48,12 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
+      <h1 className="text-3xl font-bold">Uploads</h1>
+
       <ConfigurationStatus />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {currentUserId && <UploadForm userId={currentUserId} />}
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Snelle Acties</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <p>Welkom bij het dealer portaal!</p>
-              <ul className="list-disc list-inside space-y-2 text-sm text-gray-600">
-                <li>Upload bestanden naar projectmappen</li>
-                <li>Download goedgekeurde bestanden</li>
-                <li>Chat met andere dealers</li>
-                <li>Bekijk je upload geschiedenis</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {currentUserId && <DownloadTable userId={currentUserId} />}

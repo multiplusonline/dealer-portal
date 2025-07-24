@@ -12,7 +12,7 @@ import type { Dealer } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Send, Phone, Video, MoreVertical, Loader2, AlertCircle } from "lucide-react"
+import { Send, Loader2, AlertCircle } from "lucide-react"
 
 interface ChatWindowProps {
   currentUserId: string
@@ -144,18 +144,6 @@ export function ChatWindow({ currentUserId, otherUserId, otherUserName }: ChatWi
                 </p>
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" disabled>
-              <Phone className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="sm" disabled>
-              <Video className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="sm" disabled>
-              <MoreVertical className="h-4 w-4" />
-            </Button>
           </div>
         </div>
       </CardHeader>

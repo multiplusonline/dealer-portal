@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { ConversationList } from "@/components/ConversationList"
 import { ChatWindow } from "@/components/ChatWindow"
 import { UserSwitcher } from "@/components/UserSwitcher"
-import { DatabaseSetupInstructions } from "@/components/DatabaseSetupInstructions"
+import { ConfigurationStatus } from "@/components/ConfigurationStatus"
 import { UserManagementModel } from "@/models/userManagementModel"
 import { ChatModel } from "@/models/chatModel"
 import { isSupabaseConfigured } from "@/lib/supabase/client"
@@ -22,7 +22,6 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (isSupabaseConfigured() && currentUserId) {
-      // Log that user started a chat session
       ChatModel.logChatAction(currentUserId, "conversation_started", {
         timestamp: new Date().toISOString(),
       })
@@ -36,10 +35,8 @@ export default function ChatPage() {
     }
 
     try {
-      // Get the first available dealer as the current user
       const dealers = await UserManagementModel.getAllDealers(false)
       if (dealers.length > 0) {
-        // Try to find a user with "current" in email, otherwise use first dealer
         const currentUser = dealers.find((d) => d.email.includes("current")) || dealers[0]
         setCurrentUserId(currentUser.id)
       }
@@ -56,7 +53,7 @@ export default function ChatPage() {
 
   const handleUserChange = (userId: string) => {
     setCurrentUserId(userId)
-    setSelectedDealer(null) // Reset selected dealer when switching users
+    setSelectedDealer(null)
   }
 
   if (loading) {
@@ -76,7 +73,7 @@ export default function ChatPage() {
   if (!isSupabaseConfigured()) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <DatabaseSetupInstructions />
+        <ConfigurationStatus />
 
         <div className="h-[600px] flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
           <div className="text-center">
@@ -94,14 +91,14 @@ export default function ChatPage() {
   if (!currentUserId) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <DatabaseSetupInstructions />
+        <ConfigurationStatus />
 
         <div className="h-[600px] flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
           <div className="text-center">
             <MessageCircle className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">Geen gebruikers gevonden</h3>
             <p className="text-gray-500 max-w-sm">
-              Voer eerst het database setup script uit om test gebruikers aan te maken.
+              Er zijn nog geen dealers in de database. Maak eerst enkele dealers aan via het admin panel.
             </p>
           </div>
         </div>
@@ -111,7 +108,7 @@ export default function ChatPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <DatabaseSetupInstructions />
+      <ConfigurationStatus />
 
       <UserSwitcher currentUserId={currentUserId} onUserChange={handleUserChange} />
 
