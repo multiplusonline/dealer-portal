@@ -348,6 +348,12 @@ function CreateDealerDialog({ onSuccess }: { onSuccess: () => void }) {
         throw new Error("Email is required")
       }
 
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        throw new Error("Please enter a valid email address")
+      }
+
       console.log("Creating dealer with data:", formData)
 
       await UserManagementModel.createDealer(formData)
@@ -367,7 +373,21 @@ function CreateDealerDialog({ onSuccess }: { onSuccess: () => void }) {
       onSuccess()
     } catch (error: any) {
       console.error("Create dealer error:", error)
-      setError(error.message || "Failed to create dealer")
+
+      // Extract meaningful error message
+      let errorMessage = "Failed to create dealer"
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === "string") {
+        errorMessage = error
+      } else if (error?.message) {
+        errorMessage = error.message
+      } else if (error?.error?.message) {
+        errorMessage = error.error.message
+      }
+
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -505,12 +525,34 @@ function EditDealerDialog({
         throw new Error("Email is required")
       }
 
+      // Validate email format
+      if (formData.email && formData.email.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(formData.email)) {
+          throw new Error("Please enter a valid email address")
+        }
+      }
+
       await UserManagementModel.updateDealer(dealer.id, formData)
       setError(null)
       onSuccess()
     } catch (error: any) {
       console.error("Update dealer error:", error)
-      setError(error.message || "Failed to update dealer")
+
+      // Extract meaningful error message
+      let errorMessage = "Failed to update dealer"
+
+      if (error instanceof Error) {
+        errorMessage = error.message
+      } else if (typeof error === "string") {
+        errorMessage = error
+      } else if (error?.message) {
+        errorMessage = error.message
+      } else if (error?.error?.message) {
+        errorMessage = error.error.message
+      }
+
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

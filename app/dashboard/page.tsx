@@ -1,23 +1,60 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { UploadForm } from "@/components/UploadForm"
 import { DownloadTable } from "@/components/DownloadTable"
-import { ConfigurationStatus } from "@/components/ConfigurationStatus"
+import { DatabaseSetupInstructions } from "@/components/DatabaseSetupInstructions"
+import { UserManagementModel } from "@/models/userManagementModel"
+import { isSupabaseConfigured } from "@/lib/supabase/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function DashboardPage() {
   const { t } = useTranslation()
+  const [currentUserId, setCurrentUserId] = useState<string>("")
+  const [loading, setLoading] = useState(true)
 
-  // Mock user ID - in real app this would come from auth
-  const userId = "current-user-id"
+  useEffect(() => {
+    loadInitialUser()
+  }, [])
+
+  const loadInitialUser = async () => {
+    if (!isSupabaseConfigured()) {
+      setLoading(false)
+      return
+    }
+
+    try {
+      // Get the first available dealer as the current user
+      const dealers = await UserManagementModel.getAllDealers(false)
+      if (dealers.length > 0) {
+        // Try to find a user with "current" in email, otherwise use first dealer
+        const currentUser = dealers.find((d) => d.email.includes("current")) || dealers[0]
+        setCurrentUserId(currentUser.id)
+      }
+    } catch (error) {
+      console.error("Failed to load initial user:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <div className="text-center py-8">
+          <p>Dashboard laden...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
-      <ConfigurationStatus />
+      <DatabaseSetupInstructions />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <UploadForm userId={userId} />
+        {currentUserId && <UploadForm userId={currentUserId} />}
 
         <Card>
           <CardHeader>
@@ -37,7 +74,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <DownloadTable userId={userId} />
+      {currentUserId && <DownloadTable userId={currentUserId} />}
     </div>
   )
 }

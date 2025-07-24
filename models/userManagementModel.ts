@@ -78,6 +78,7 @@ export class UserManagementModel {
           throw new Error("Database tables not setup. Please run the database setup script first.")
         }
 
+        // Handle specific PostgreSQL error codes
         if (error.code === "23505") {
           throw new Error("A dealer with this email address already exists")
         }
@@ -86,7 +87,22 @@ export class UserManagementModel {
           throw new Error("Missing required field. Please check all required fields are filled.")
         }
 
-        throw new Error(`Database error: ${error.message}`)
+        if (error.code === "42P01") {
+          throw new Error("Database table 'dealers' does not exist. Please run the database setup script.")
+        }
+
+        // Handle other common errors
+        if (error.code === "23503") {
+          throw new Error("Invalid reference to another table")
+        }
+
+        if (error.code === "42501") {
+          throw new Error("Permission denied. Please check your database permissions.")
+        }
+
+        // Generic error with more details
+        const errorMessage = error.message || error.details || error.hint || "Unknown database error"
+        throw new Error(`Database error: ${errorMessage}`)
       }
 
       if (!data) {
@@ -161,7 +177,16 @@ export class UserManagementModel {
           throw new Error("A dealer with this email address already exists")
         }
 
-        throw new Error(`Failed to update dealer: ${error.message}`)
+        if (error.code === "42P01") {
+          throw new Error("Database table 'dealers' does not exist. Please run the database setup script.")
+        }
+
+        if (error.code === "42501") {
+          throw new Error("Permission denied. Please check your database permissions.")
+        }
+
+        const errorMessage = error.message || error.details || error.hint || "Unknown database error"
+        throw new Error(`Failed to update dealer: ${errorMessage}`)
       }
 
       if (!data) {

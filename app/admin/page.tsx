@@ -2,6 +2,7 @@
 
 import { UserManagement } from "@/components/UserManagement"
 import { DownloadTable } from "@/components/DownloadTable"
+import { DatabaseSetupInstructions } from "@/components/DatabaseSetupInstructions"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, Files, Activity } from "lucide-react"
@@ -10,6 +11,8 @@ export default function AdminPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+
+      <DatabaseSetupInstructions />
 
       <Tabs defaultValue="users" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">

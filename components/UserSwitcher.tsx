@@ -34,6 +34,11 @@ export function UserSwitcher({ currentUserId, onUserChange }: UserSwitcherProps)
     try {
       const data = await UserManagementModel.getAllDealers(false)
       setDealers(data)
+
+      // If no current user is selected and we have dealers, select the first one
+      if (!currentUserId && data.length > 0) {
+        onUserChange(data[0].id)
+      }
     } catch (error) {
       console.error("Failed to load dealers:", error)
     } finally {
@@ -46,6 +51,43 @@ export function UserSwitcher({ currentUserId, onUserChange }: UserSwitcherProps)
     const lastLoginTime = new Date(dealer.last_login).getTime()
     const now = Date.now()
     return now - lastLoginTime < 5 * 60 * 1000 // 5 minutes
+  }
+
+  if (loading) {
+    return (
+      <Card className="mb-6 border-blue-200 bg-blue-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-blue-800">
+            <Users className="h-5 w-5" />
+            Test User Switcher
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-4">
+            <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+            <span>Gebruikers laden...</span>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (dealers.length === 0) {
+    return (
+      <Card className="mb-6 border-yellow-200 bg-yellow-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-yellow-800">
+            <Users className="h-5 w-5" />
+            Geen Gebruikers Gevonden
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-yellow-700">
+            Er zijn nog geen dealers in de database. Voer eerst het database setup script uit.
+          </p>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
